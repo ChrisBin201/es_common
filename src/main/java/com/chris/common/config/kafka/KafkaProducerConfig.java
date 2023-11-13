@@ -52,7 +52,7 @@ class KafkaProducerConfig {
                         Map.of(
                                 Pattern.compile("^"+MessageEvent.PRODUCT_TOPIC+".*"), new ProductInfoSerializer()
                         ),
-                        new JsonSerializer<>())
+                        new StringSerializer())
                 );
     }
 

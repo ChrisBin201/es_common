@@ -56,14 +56,30 @@ public enum CommonErrorCode {
     //PRODUCT_SERVICE
     INVALID_COUNTRY_ADDRESS( "INVALID_COUNTRY_ADDRESS", "Invalid detail address"),
     INVALID_PRODUCT( "INVALID_PRODUCT", "Product is invalid"),
-
+    PRODUCT_NOT_FOUND( "PRODUCT_NOT_FOUND", "Product is not found"),
     INVALID_PRODUCT_STATUS( "INVALID_PRODUCT_STATUS", "Product status is invalid"),
+    PRODUCT_ITEM_NOT_FOUND( "PRODUCT_ITEM_NOT_FOUND", "Product item is not found"),
+    PRODUCT_ITEM_OUT_OF_STOCK( "PRODUCT_ITEM_OUT_OF_STOCK", "%s is out of stock"),
 
     //SEARCH SERVICE
     INVALID_SEARCH( "INVALID_SEARCH", "Search is invalid"),
     INVALID_PRICE_FILTER( "INVALID_PRICE_FILTER", "Price filter is invalid"),
 
-    INVALID_SORT_FIELD( "INVALID_SORT_FIELD", "Sort field is invalid");
+    INVALID_SORT_FIELD( "INVALID_SORT_FIELD", "Sort field is invalid"),
+
+    //ORDER SERVICE
+    INVALID_ORDER_STATUS( "INVALID_ORDER_STATUS", "Order status is invalid"),
+    INVALID_ORDER_STATUS_SEQUENCE( "INVALID_ORDER_STATUS_SEQUENCE", "Order status sequence is invalid"),
+    INVALID_INVOICE_STATUS( "INVALID_INVOICE_STATUS", "Invoice status is invalid"),
+
+    CART_NOT_FOUND( "CART_NOT_FOUND", "Cart is not found"),
+
+    ORDER_NOT_FOUND( "ORDER_NOT_FOUND", "Order is not found"),
+    RATING_NOT_FOUND( "RATING_NOT_FOUND", "Rating is not found"),
+    SHIPMENT_NOT_FOUND( "SHIPMENT_NOT_FOUND", "Shipment is not found"),
+
+    CATEGORY_NOT_FOUND( "CATEGORY_NOT_FOUND", "Category is not found");
+
 
 
     private  int status;

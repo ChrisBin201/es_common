@@ -1,5 +1,7 @@
 package com.chris.common.service.redis.impl;
 
+import com.chris.common.handler.CommonErrorCode;
+import com.chris.common.handler.CommonException;
 import com.chris.common.repo.redis.RedisAccessTokenRepo;
 import com.chris.common.repo.redis.RedisCartRepo;
 import com.chris.common.service.redis.RedisCartService;
@@ -12,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -24,7 +27,6 @@ public class RedisCartServiceImpl implements RedisCartService {
 
     private static final Logger logger = LoggerFactory.getLogger(RedisCartServiceImpl.class);
 
-    private static final String CART = "Cart";
 
     private final ObjectMapper objectMapper = new ObjectMapper();
     @Autowired
@@ -42,17 +44,22 @@ public class RedisCartServiceImpl implements RedisCartService {
             Optional<List<Cart>> oldCarts = getCarts(cart.getCustomerId());
             List<Cart> carts = null;
             if(oldCarts.isPresent()){
-                carts = oldCarts.get();
+//                carts = oldCarts.get();
                 boolean cartExist = false;
-                for(Cart oldCart : carts){
+                for(Cart oldCart : oldCarts.get()){
                     if(oldCart.getProductItem().getId() == cart.getProductItem().getId()){
-                        oldCart.setQuantity(cart.getQuantity());
+                        long oldQuantity = oldCart.getQuantity();
+                        oldCart.setQuantity(oldQuantity+cart.getQuantity());
                         cartExist = true;
                         break;
                     }
                 }
                 if(!cartExist){
+                    carts = new ArrayList<>(oldCarts.get());
                     carts.add(cart);
+                }
+                else{
+                    carts = oldCarts.get();
                 }
             }
             else{
@@ -60,26 +67,48 @@ public class RedisCartServiceImpl implements RedisCartService {
                 carts.add(cart);
             }
             String jsonCarts = objectMapper.writeValueAsString(carts);
-            redisCartRepo.saveCart(jsonCarts, CART.trim(), String.valueOf(cart.getCustomerId()));
+            redisCartRepo.saveCart(jsonCarts, String.valueOf(cart.getCustomerId()));
         } catch (Exception e) {
             logger.error("An error when save CART into redis db", e);
         }
     }
 
-//    @Override
-//    public void updateCart(Cart cart) {
-//        try {
-//            String jsonToken = objectMapper.writeValueAsString(cart);
-//            redisCartRepo.updateCart(jsonToken, CART.trim(), String.valueOf(cart.getCustomerId()));
-//        } catch (Exception e) {
-//            logger.error("An error when update CART into redis db", e);
-//        }
-//    }
+    @Override
+    public void updateCart(Cart cart) {
+        try {
+            Optional<List<Cart>> oldCarts = getCarts(cart.getCustomerId());
+            List<Cart> carts = null;
+            if(oldCarts.isPresent()){
+//                carts = oldCarts.get();
+                boolean cartExist = false;
+                for(Cart oldCart : oldCarts.get()){
+                    if(oldCart.getProductItem().getId() == cart.getProductItem().getId()){
+                        oldCart.setQuantity(cart.getQuantity());
+                        cartExist = true;
+                        break;
+                    }
+                }
+                if(!cartExist){
+                    carts = new ArrayList<>(oldCarts.get());
+                    carts.add(cart);
+                }
+                else{
+                    carts = oldCarts.get();
+                }
+            }
+            else
+                throw new CommonException(HttpStatus.BAD_REQUEST.value(), CommonErrorCode.CART_NOT_FOUND.getCode(), CommonErrorCode.CART_NOT_FOUND.getMessage());
+            String jsonCarts = objectMapper.writeValueAsString(carts);
+            redisCartRepo.saveCart(jsonCarts, String.valueOf(cart.getCustomerId()));
+        } catch (Exception e) {
+            logger.error("An error when save CART into redis db", e);
+        }
+    }
 
     @Override
     public Optional<List<Cart>> getCarts(long customerId) {
         try {
-            Object cartsObject = redisCartRepo.getCartsByCustomer(String.valueOf(customerId), CART.trim());
+            Object cartsObject = redisCartRepo.getCartsByCustomer(String.valueOf(customerId));
             Cart[] carts = objectMapper.readValue(cartsObject.toString(), Cart[].class);
 
             if (DataUtils.notNull(carts)) {
@@ -93,9 +122,30 @@ public class RedisCartServiceImpl implements RedisCartService {
     }
 
     @Override
+    public void deleteCart(long customerId, long productItemId) {
+        try {
+            Optional<List<Cart>> oldCarts = getCarts(customerId);
+            List<Cart> carts = null;
+            if(oldCarts.isPresent()){
+                carts = new ArrayList<>(oldCarts.get());
+                for(Cart oldCart : carts){
+                    if(oldCart.getProductItem().getId() == productItemId){
+                        carts.remove(oldCart);
+                        break;
+                    }
+                }
+            }
+            String jsonCarts = objectMapper.writeValueAsString(carts);
+            redisCartRepo.saveCart(jsonCarts, String.valueOf(customerId));
+        } catch (Exception e) {
+            logger.error("An error when remove CART into redis db", e);
+        }
+    }
+
+    @Override
     public void deleteCarts(long customerId) {
         try {
-            redisCartRepo.deleteCarts(String.valueOf(customerId), CART.trim());
+            redisCartRepo.deleteCarts(String.valueOf(customerId));
         } catch (Exception e) {
             logger.error("An error when DELETE CART into redis db", e);
         }

@@ -15,6 +15,7 @@ import com.chris.data.dto.BaseDTO;
 @JsonIgnoreProperties(value = {"created_by", "created_date", "last_modified_by", "last_modified_date","id","status","username","role_names"}, allowGetters = true,ignoreUnknown = true)
 public class UserDTO extends BaseDTO<String> {
     private long id;
+    private String avatar;
     private String username;
     private String fullname;
     private User.UserStatus status;

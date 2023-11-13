@@ -12,6 +12,8 @@ import java.util.Optional;
 @Repository
 public class RedisCartRepo {
     private static final Logger logger = LoggerFactory.getLogger(RedisCartRepo.class);
+    private static final String CART = "Cart";
+
 
     private HashOperations hashOperations;
 
@@ -23,28 +25,28 @@ public class RedisCartRepo {
         this.hashOperations = this.redisTemplate.opsForHash();
     }
 
-    public void saveCart(String jsonObject, String type, String customerIdField) {
+    public void saveCart(String jsonObject, String customerIdField) {
         try {
-            hashOperations.put(type, customerIdField, jsonObject);
+            hashOperations.put(CART, customerIdField, jsonObject);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
     };
 
-    public void updateCart(String jsonObject, String type, String customerIdField) {
-        saveCart(jsonObject, type, customerIdField);
-    };
+//    public void updateCart(String jsonObject, String type, String customerIdField) {
+//        saveCart(jsonObject, type, customerIdField);
+//    };
 
 //    public Object getCart(String customerIdField, String type) {
 //        return hashOperations.get(type,  customerIdField);
 //    };
 
-    public Object getCartsByCustomer(String customerIdField, String type) {
-        return (Object) hashOperations.get(type,  customerIdField);
+    public Object getCartsByCustomer(String customerIdField) {
+        return (Object) hashOperations.get(CART,  customerIdField);
     };
 
-    public void deleteCarts(String customerIdField, String type) {
-        hashOperations.delete(type, customerIdField);
+    public void deleteCarts(String customerIdField) {
+        hashOperations.delete(CART, customerIdField);
     };
 
 }

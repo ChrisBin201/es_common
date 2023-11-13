@@ -26,7 +26,7 @@ public class ProductDetailDTO {
     @JsonProperty("variations")
     private List<Variation> variationList;
     @JsonProperty("product_items")
-    private Set<ProductItem> productItemList;
+    private List<ProductItem> productItemList;
 //    private List<ProductItem> productItems;
     @JsonProperty("rating_average")
     private Double ratingAverage;

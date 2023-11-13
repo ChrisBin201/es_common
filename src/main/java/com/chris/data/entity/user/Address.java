@@ -44,6 +44,7 @@ public class Address extends Auditable<String,Address> implements Serializable {
     private String parentCode;
 
     @ManyToOne
+    @JsonIgnore
     private Country country;
 
     @Getter

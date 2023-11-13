@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 @Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ResponseData<T> {
-    public boolean error;
+//    public boolean error;
     public String message;
 //    public Integer status;
     @JsonSerialize(using = LocalDateTimeSerializer.class)
@@ -39,7 +39,7 @@ public class ResponseData<T> {
         this.timestamp = LocalDateTime.now();
         this.message = message;
 //        this.status = success ? HttpStatus.OK.value() : HttpStatus.INTERNAL_SERVER_ERROR.value();
-        error = !success ;
+//        error = !success ;
     }
 
     public void success() {
@@ -54,7 +54,7 @@ public class ResponseData<T> {
     }
     public void error(String message){
 //        status = HttpStatus.INTERNAL_SERVER_ERROR.value();
-        error = true;
+//        error = true;
         this.message = message;
     }
 }

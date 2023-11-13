@@ -24,7 +24,6 @@ public class Variation implements Serializable {
 //    @Id
 //    @GeneratedValue(strategy = GenerationType.IDENTITY)
 //    private Long id;
-    private String code; //SKU_VAR
     private String name;
 //    @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL,orphanRemoval = true)
 //    @JoinColumn(name = "variation_id")

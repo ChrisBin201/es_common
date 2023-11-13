@@ -1,7 +1,11 @@
 package com.chris.data.elasticsearch;
 
+import co.elastic.clients.elasticsearch._types.SortOptions;
+import co.elastic.clients.elasticsearch._types.SortOptionsBuilders;
+import com.chris.data.elasticsearch.sub.SaleInfo;
+import com.chris.data.entity.order.sub.ProductItemDetail;
 import com.chris.data.entity.product.*;
-import com.chris.data.entity.product.sub.PromotionInfo;
+import com.chris.data.entity.product.sub.PromotionDetail;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -9,15 +13,16 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
+import org.springframework.data.elasticsearch.core.suggest.response.SortBy;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 @Data
 @Builder
@@ -45,18 +50,18 @@ public class ProductInfo implements Serializable {
     @Field(name = "seller_id")
     private long sellerId;
 
-    private List<PromotionInfo> promotions;
+    private List<PromotionDetail> promotions;
     //    private List<Variation> variations;
     @JsonProperty("variations")
     private List<Variation> variations;
     @JsonProperty("product_items")
     @Field(name = "product_items")
-    private Set<ProductItem> productItems;
-    //    private List<ProductItem> productItems;
+//    private Set<ProductItem> productItems;
+    private List<ProductItemDetail> productItems;
     @JsonProperty("rating_average")
     @Field(name = "rating_average")
     private double ratingAverage;
-    private long sales;
+    private SaleInfo sales;
 
     public static ProductInfo from(Product product, List<Category> categoriesTree ) {
         return ProductInfo.builder()
@@ -67,11 +72,34 @@ public class ProductInfo implements Serializable {
                 .status(product.getStatus())
                 .categoriesTree(categoriesTree)
                 .sellerId(product.getSellerId())
-                .promotions(product.getPromotionList())
+                .promotions(product.getPromotionList().stream().map(PromotionDetail::from).toList())
                 .variations(product.getVariations())
-                .productItems(product.getProductItems())
+                .productItems(product.getProductItems().stream().map(item -> ProductItemDetail.from(item,product)).toList())
+                .sales(new SaleInfo(0,0))
                 .build();
     }
 
-    public static List<String> SORT_FIELDS = List.of("id","name","rating_average","sales");
+//    public static ProductInfo from (Product product) {
+//        return ProductInfo.builder()
+//                .id(product.getId())
+//                .preview(product.getPreview())
+//                .name(product.getName())
+//                .description(product.getDescription())
+//                .status(product.getStatus())
+//                .sellerId(product.getSellerId())
+//                .promotions(product.getPromotionList())
+//                .variations(product.getVariations())
+//                .productItems(product.getProductItems())
+//                .build();
+//    }
+    public static List<Pair<String, Sort>> SORT_FIELDS = List.of(
+            Pair.of("id_asc", Sort.sort(ProductInfo.class).by(ProductInfo::getId).ascending()),
+            Pair.of("id_desc", Sort.sort(ProductInfo.class).by(ProductInfo::getId).descending()),
+            Pair.of("rating_asc",Sort.sort(ProductInfo.class).by(ProductInfo::getRatingAverage).ascending()),
+            Pair.of("rating_desc",Sort.sort(ProductInfo.class).by(ProductInfo::getRatingAverage).descending()),
+            Pair.of("sales_asc",Sort.by("sales.total_quantity").ascending()),
+            Pair.of("sales_desc",Sort.by("sales.total_quantity").descending()),
+            Pair.of("price_asc",Sort.by("product_items.price").ascending()),
+            Pair.of("price_desc",Sort.by("product_items.price").descending())
+    );
 }

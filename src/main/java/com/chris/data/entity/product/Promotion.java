@@ -41,15 +41,15 @@ public class Promotion extends Auditable<String,Promotion> implements Serializab
     @JsonProperty("end_date")
     private LocalDateTime endDate;
     private boolean active;
-//    @ManyToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE})
-//    @JsonIgnore
-//    @JoinTable(
-//            name = "product_promotion",
-//            joinColumns = @JoinColumn(
-//                    name = "promotion_id", referencedColumnName = "id"),
-//            inverseJoinColumns = @JoinColumn(
-//                    name = "product_id", referencedColumnName = "id"))
-//    private List<Product> productList;
+    @ManyToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE})
+    @JsonIgnore
+    @JoinTable(
+            name = "product_promotion",
+            joinColumns = @JoinColumn(
+                    name = "promotion_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(
+                    name = "product_id", referencedColumnName = "id"))
+    private List<Product> productList;
 
 
 }

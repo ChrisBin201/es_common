@@ -1,6 +1,7 @@
 package com.chris.data.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -11,10 +12,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
-import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.annotation.*;
+import org.springframework.data.elasticsearch.annotations.DateFormat;
+import org.springframework.data.elasticsearch.annotations.FieldType;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import jakarta.persistence.Column;
@@ -33,6 +33,7 @@ import java.util.Arrays;
 @Slf4j
 @EntityListeners(AuditingEntityListener.class)
 @JsonIgnoreProperties(value = {"created_by", "created_date", "last_modified_by", "last_modified_date"})
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public abstract class Auditable<T,Model> implements Serializable {
 
 //    @CreatedBy
@@ -45,6 +46,7 @@ public abstract class Auditable<T,Model> implements Serializable {
     @Column(name = "created_date")
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @Transient // ignore from elasticsearch
     protected LocalDateTime createdDate;
 
 //    @LastModifiedBy
@@ -57,6 +59,7 @@ public abstract class Auditable<T,Model> implements Serializable {
     @Column(name = "last_modified_date")
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @Transient // ignore from elasticsearch
     protected LocalDateTime lastModifiedDate;
 
 //    @Column(name = "status", length = 20)

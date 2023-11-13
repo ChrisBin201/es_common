@@ -2,10 +2,13 @@ package com.chris.common.service.redis;
 
 import com.chris.data.redis.AccessToken;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface RedisAccessTokenService {
     void saveAccessToken(AccessToken token);
+
+    List<AccessToken> getAllAdminToken();
     void updateAccessToken(AccessToken token);
     Optional<AccessToken> getAccessToken(String uuid);
     void deleteAccessToken(String uuid);

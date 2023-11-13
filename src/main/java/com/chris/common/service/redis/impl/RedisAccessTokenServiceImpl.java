@@ -15,9 +15,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
 import jakarta.servlet.http.HttpServletRequest;
-import java.util.Optional;
-import java.util.Random;
-import java.util.UUID;
+
+import java.util.*;
 
 @Slf4j
 @Service
@@ -27,8 +26,8 @@ public class RedisAccessTokenServiceImpl implements RedisAccessTokenService {
 
     private static final String BEARER_PREFIX = "Bearer ";
 
-    private static final String ACCESSTOKEN = "accessToken";
-    private static final String REFRESHTOKEN = "refreshToken";
+    private static final String ACCESSTOKEN = "ACCESS_TOKEN";
+    private static final String REFRESHTOKEN = "REFRESH_TOKEN";
 
     private final ObjectMapper objectMapper = new ObjectMapper();
     @Autowired
@@ -68,6 +67,24 @@ public class RedisAccessTokenServiceImpl implements RedisAccessTokenService {
         } catch (Exception e) {
             logger.error("An error when save ACCESS token into redis db", e);
         }
+    }
+
+    @Override
+    public List<AccessToken> getAllAdminToken() {
+        Map<Object,Object> allToken = redisRepository.getAllToken(ACCESSTOKEN.trim());
+        List<AccessToken> listToken = new ArrayList<>();
+        for (Map.Entry<Object, Object> entry : allToken.entrySet()) {
+            AccessToken accessToken = null;
+            try {
+                accessToken = objectMapper.readValue(entry.getValue().toString(), AccessToken.class);
+            } catch (Exception e) {
+                logger.error("An error when get ACCESS token into redis db", e);
+            }
+            if(accessToken != null && accessToken.getRoles().contains("ADMIN")) {
+                listToken.add(accessToken);
+            }
+        }
+        return listToken;
     }
 
     @Override

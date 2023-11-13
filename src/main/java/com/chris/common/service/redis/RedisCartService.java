@@ -9,8 +9,10 @@ import java.util.Optional;
 public interface RedisCartService {
 
     void saveCart(Cart cart);
-//    void updateCart(Cart cart);
+    void updateCart(Cart cart);
     Optional<List<Cart>> getCarts(long customerId);
+
+    void deleteCart(long customerId,long productItemId);
     void deleteCarts(long customerId);
 
 }

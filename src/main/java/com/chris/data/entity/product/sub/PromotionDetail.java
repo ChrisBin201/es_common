@@ -1,16 +1,11 @@
 package com.chris.data.entity.product.sub;
 
+import com.chris.data.entity.product.Promotion;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
 import lombok.*;
 
 import java.io.Serializable;
@@ -21,7 +16,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PromotionInfo implements Serializable {
+public class PromotionDetail implements Serializable {
 
     private Long id;
     private String name;
@@ -41,4 +36,16 @@ public class PromotionInfo implements Serializable {
     private LocalDateTime endDate;
 
     private boolean active;
+
+    public static PromotionDetail from (Promotion promotion ){
+        return PromotionDetail.builder()
+                .id(promotion.getId())
+                .name(promotion.getName())
+                .description(promotion.getDescription())
+                .discountRate(promotion.getDiscountRate())
+                .startDate(promotion.getStartDate())
+                .endDate(promotion.getEndDate())
+                .active(promotion.isActive())
+                .build();
+    }
 }

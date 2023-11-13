@@ -4,8 +4,6 @@ import com.chris.common.handler.CommonErrorCode;
 import com.chris.common.handler.CommonException;
 import com.chris.data.entity.Auditable;
 
-import com.chris.data.entity.product.sub.ProductDetail;
-import com.chris.data.entity.product.sub.PromotionInfo;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.ToString;
@@ -39,10 +37,10 @@ public class Product extends Auditable<String,Product> implements Serializable {
     @Column(name = "variations",columnDefinition = "jsonb")
     private List<Variation> variations = new ArrayList<>();
 //    private Set<Variation> variations = new HashSet<>();
-    @OneToMany(fetch = FetchType.EAGER,orphanRemoval = true,cascade = CascadeType.ALL)
+    @OneToMany(orphanRemoval = true,cascade = CascadeType.ALL)
     @JoinColumn(name = "product_id")
-//    private List<ProductItem> productItems = new ArrayList<>();
-    private Set<ProductItem> productItems = new HashSet<>();
+    private List<ProductItem> productItems = new ArrayList<>();
+//    private Set<ProductItem> productItems = new HashSet<>();
 
     @ManyToOne(cascade = CascadeType.MERGE)
     private Category category;
@@ -60,10 +58,10 @@ public class Product extends Auditable<String,Product> implements Serializable {
 //    private User userAdmin;
     @Column(name = "admin_id")
     private Long adminId;
-//    @ManyToMany(mappedBy = "productList")
-    @JdbcTypeCode(SqlTypes.JSON)
-    @Column(name = "promotions",columnDefinition = "jsonb")
-    private List<PromotionInfo> promotionList = new ArrayList<>();
+    @ManyToMany(mappedBy = "productList")
+//    @JdbcTypeCode(SqlTypes.JSON)
+//    @Column(name = "promotions",columnDefinition = "jsonb")
+    private List<Promotion> promotionList = new ArrayList<>();
 
     public static enum ProductStatus {
         ACTIVE,BLOCK,CANCEL,PENDING,DELETED;
@@ -74,6 +72,14 @@ public class Product extends Auditable<String,Product> implements Serializable {
             } catch (Exception e) {
                 throw new CommonException(HttpStatus.BAD_REQUEST.value(), CommonErrorCode.INVALID_PRODUCT_STATUS.getCode(), CommonErrorCode.INVALID_PRODUCT_STATUS.getMessage());
             }
+        }
+
+        public static String getAll(){
+            return "ALL";
+        }
+
+        public static String getOutOfStock(){
+            return "OUT_OF_STOCK";
         }
     }
     public static List<String> SortOptions() {
@@ -108,10 +114,10 @@ public class Product extends Auditable<String,Product> implements Serializable {
         productItems.remove(productItem);
 //        productItem.setProduct(null);
     }
-    public void addPromotion(PromotionInfo promotion){
+    public void addPromotion(Promotion promotion){
         promotionList.add(promotion);
     }
-    public void removePromotion(PromotionInfo promotion){
+    public void removePromotion(Promotion promotion){
         promotionList.remove(promotion);
     }
 

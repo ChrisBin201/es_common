@@ -6,6 +6,8 @@ import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.Map;
+
 @Repository
 public class RedisAccessTokenRepo {
     private static final Logger logger = LoggerFactory.getLogger(RedisAccessTokenRepo.class);
@@ -34,6 +36,9 @@ public class RedisAccessTokenRepo {
 
     public Object getToken(String uuid, String type) {
         return hashOperations.get(type,  uuid);
+    };
+    public Map<Object,Object> getAllToken(String type) {
+        return  hashOperations.entries(type);
     };
 
     public Object getTokenByObject(String uuid, String type) {

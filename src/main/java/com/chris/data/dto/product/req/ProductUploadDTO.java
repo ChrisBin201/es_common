@@ -22,9 +22,9 @@ public class ProductUploadDTO {
     private String name;
     @NotBlank
     private String description;
-    @NotNull
-    @JsonProperty("seller_id")
-    private Long sellerId;
+//    @NotNull
+//    @JsonProperty("seller_id")
+//    private Long sellerId;
     @NotNull
     @JsonProperty("category_id")
     private Long categoryId;

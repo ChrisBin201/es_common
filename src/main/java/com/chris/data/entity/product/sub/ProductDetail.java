@@ -14,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductDetail implements Serializable {
-//    private Long id;
+    private Long id;
     private String preview;
     private String name;
     private String description;
@@ -28,6 +28,7 @@ public class ProductDetail implements Serializable {
 
     public static ProductDetail from (Product product ) {
         ProductDetail productInfo = new ProductDetail();
+        productInfo.setId(product.getId());
         productInfo.setName(product.getName());
         productInfo.setPreview(product.getPreview());
         productInfo.setDescription(product.getDescription());

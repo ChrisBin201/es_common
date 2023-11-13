@@ -2,6 +2,7 @@ package com.chris.data.entity.product;
 
 import com.chris.data.entity.product.sub.ProductDetail;
 import com.chris.data.entity.product.sub.VariantOption;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -30,26 +31,16 @@ public class ProductItem implements Serializable {
     private long quantityInStock;
     private double price;
     private String preview;
-//    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
 //    @JsonIgnore
-//    private Product product;
+    private Product product;
 //    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
-    @JdbcTypeCode(SqlTypes.JSON)
-    @Column(name = "product_info",columnDefinition = "jsonb")
-    @JsonProperty("product_info")
-    @Field(name = "product_info")
-    ProductDetail productInfo;
-//    @JoinTable(
-//            name = "product_config",
-//            uniqueConstraints = @UniqueConstraint(
-//                    columnNames = {"product_item_id", "variation_option_id"}),
-//            joinColumns = @JoinColumn(
-//                    name = "product_item_id", referencedColumnName = "id"),
-//            inverseJoinColumns = @JoinColumn(
-//                    name = "variation_option_id", referencedColumnName = "id"))
-//    private List<VariationOption> variationOptions = new ArrayList<>();
+//    @JdbcTypeCode(SqlTypes.JSON)
+//    @Column(name = "product_info",columnDefinition = "jsonb")
+//    @JsonProperty("product_info")
+//    @Field(name = "product_info")
+//    ProductDetail productInfo;
 
-//    @Type(value = JsonBinaryType.class)
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "variant_options",columnDefinition = "jsonb")
     @JsonProperty("variant_options")

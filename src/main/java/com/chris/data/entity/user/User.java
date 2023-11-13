@@ -1,16 +1,20 @@
 package com.chris.data.entity.user;
 
+import com.chris.data.elasticsearch.ProductInfo;
 import jakarta.persistence.*;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.tuple.Pair;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import com.chris.data.entity.Auditable;
+import org.springframework.data.domain.Sort;
 
 @Entity
 @Data
@@ -18,12 +22,13 @@ import com.chris.data.entity.Auditable;
 @Inheritance(strategy = InheritanceType.JOINED)
 @NoArgsConstructor
 @SQLDelete(sql = "UPDATE user SET status = 'DELETED' WHERE id=?")
-@Where(clause = "status='ACTIVE'")
+//@Where(clause = "status='ACTIVE'")
 public class User extends Auditable<String,User> implements Serializable {
 //        implements UserDetails  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    private String avatar;
     private String username;
     private String password;
     private String phone;
@@ -55,4 +60,11 @@ public class User extends Auditable<String,User> implements Serializable {
     public static enum UserStatus {
         ACTIVE, BLOCK, DELETED
     }
+
+    public static List<Pair<String, Sort>> SORT_FIELDS = List.of(
+            Pair.of("id_asc", Sort.by("id").ascending()),
+            Pair.of("id_desc", Sort.by("id").descending()),
+            Pair.of("name_asc",Sort.by("fullname").ascending()),
+            Pair.of("name_desc",Sort.by("fullname").descending())
+    );
 }

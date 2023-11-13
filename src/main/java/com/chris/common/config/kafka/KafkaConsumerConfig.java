@@ -54,7 +54,7 @@ class KafkaConsumerConfig {
                         Map.of(
                                 Pattern.compile("^"+MessageEvent.PRODUCT_TOPIC+".*"), new ProductInfoDeserializer()
                         ),
-                        new JsonDeserializer<>())
+                        new StringDeserializer())
         );
     }
 
