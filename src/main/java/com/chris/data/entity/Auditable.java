@@ -36,12 +36,12 @@ import java.util.Arrays;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public abstract class Auditable<T,Model> implements Serializable {
 
-//    @CreatedBy
+    @CreatedBy
     @Column(name = "created_by")
     @JsonProperty("created_by")
     protected T createdBy;
 
-    @CreatedDate
+//    @CreatedDate
     @JsonProperty("created_date")
     @Column(name = "created_date")
     @JsonSerialize(using = LocalDateTimeSerializer.class)
@@ -49,12 +49,12 @@ public abstract class Auditable<T,Model> implements Serializable {
     @Transient // ignore from elasticsearch
     protected LocalDateTime createdDate;
 
-//    @LastModifiedBy
+    @LastModifiedBy
     @JsonProperty("last_modified_by")
     @Column(name = "last_modified_by")
     protected T lastModifiedBy;
 
-    @LastModifiedDate
+//    @LastModifiedDate
     @JsonProperty("last_modified_date")
     @Column(name = "last_modified_date")
     @JsonSerialize(using = LocalDateTimeSerializer.class)

@@ -7,6 +7,9 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import lombok.Data;
+import lombok.experimental.SuperBuilder;
+import org.springframework.data.annotation.Transient;
+import org.springframework.data.elasticsearch.annotations.Field;
 
 import java.time.LocalDateTime;
 
@@ -19,6 +22,7 @@ public class BaseDTO<T> {
     @JsonProperty("created_date")
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @Transient
     public LocalDateTime createdDate;
 
     @JsonProperty("last_modified_by")
@@ -27,7 +31,15 @@ public class BaseDTO<T> {
     @JsonProperty("last_modified_date")
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @Transient
     public LocalDateTime lastModifiedDate;
 
-//    public String status;
+
+//    @JsonProperty("created_date")
+//    @Field(name = "created_date")
+//    public long createdDate;
+//
+//    @JsonProperty("last_modified_date")
+//    @Field(name = "last_modified_date")
+//    public long lastModifiedDate;
 }

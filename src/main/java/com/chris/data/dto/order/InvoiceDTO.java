@@ -7,14 +7,10 @@ import java.util.List;
 
 @Data
 public class InvoiceDTO {
-    @JsonProperty("order_lines")
-    private List<OrderLineDTO> orderLines;
+    private long id;
+    @JsonProperty("orders")
+    private List<OrderDTO> orders;
 
-//    @JsonProperty("payment_id")
-//    private long paymentId;
-//
-    @JsonProperty("shipment_id")
-    private long shipmentId;
-
-
+    @JsonProperty("payment_id")
+    private long paymentId;
 }

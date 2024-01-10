@@ -189,7 +189,7 @@ public class ElasticProductInfoServiceImpl implements ElasticProductInfoService 
         );
         //set rating average
         long orderCount = product.getSales().getOrderCount();
-        product.setRatingAverage((product.getRatingAverage() * orderCount + rating.getRating()) / (orderCount + 1));
+        product.setRatingAverage((product.getRatingAverage() * (orderCount-1) + rating.getRating()) / orderCount);
         productInfoRepo.save(product);
         return productInfoRepo.save(product).getId();
     }

@@ -33,11 +33,25 @@ public class MessageEvent {
     public static final String UPDATE_ORDER_STATUS = ORDER_TOPIC + "update_status_public";
     public static final String UPDATE_ORDER_STATUS_ROLLBACK = ORDER_TOPIC + "update_status_rollback";
 
+    public static final String UPDATE_SALES = ORDER_TOPIC + "update_sales_public";
+    public static final String UPDATE_SALES_ROLLBACK = ORDER_TOPIC + "update_sales_rollback";
+
     public static final String CREATE_RATING = ORDER_TOPIC + "create_rating_public";
     public static final String CREATE_RATING_ROLLBACK = ORDER_TOPIC + "create_rating_rollback";
 
     public static final String UPDATE_RATING = ORDER_TOPIC + "update_rating_public";
     public static final String UPDATE_RATING_ROLLBACK = ORDER_TOPIC + "update_rating_rollback";
 
+
+    public static final String PAYMENT_TOPIC = "payment_";
+
+    public static final String COMPLETE_CHECKOUT = PAYMENT_TOPIC + "complete_checkout_public";
+    public static final String COMPLETE_CHECKOUT_ROLLBACK = PAYMENT_TOPIC + "complete_checkout_rollback";
+
+    public static final String COMPLETE_PAYOUT = PAYMENT_TOPIC + "complete_payout_public";
+    public static final String COMPLETE_PAYOUT_ROLLBACK = PAYMENT_TOPIC + "complete_payout_rollback";
+
+    public static final String COMPLETE_REFUND = PAYMENT_TOPIC + "complete_refund_public";
+    public static final String COMPLETE_REFUND_ROLLBACK = PAYMENT_TOPIC + "complete_refund_rollback";
 
 }

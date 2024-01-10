@@ -7,6 +7,7 @@ import com.chris.data.elasticsearch.ProductInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
@@ -26,7 +27,6 @@ public class CustomOrderInfoRepoImpl implements CustomOrderInfoRepo {
 
     @Override
     public SearchHits<OrderInfo> searchByCustomer(String status, PageRequest pageRequest) {
-        //TODO: implement search orders
         String filterQuery = "";
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetailsInfo userLogin = (UserDetailsInfo) authentication.getPrincipal();
@@ -34,7 +34,7 @@ public class CustomOrderInfoRepoImpl implements CustomOrderInfoRepo {
             String condition = """
                     ,{
                         "match": {
-                            "customer_id": %d
+                            "invoice.customer_id": %d
                         }
                     }
                     """;
@@ -66,7 +66,9 @@ public class CustomOrderInfoRepoImpl implements CustomOrderInfoRepo {
         log.info("stringQuery: {}", stringQuery);
         org.springframework.data.elasticsearch.core.query.Query query = new StringQuery(stringQuery);
         query.setPageable(PageRequest.of(pageRequest.getPageNumber(), pageRequest.getPageSize()));
-        query.addSort(pageRequest.getSort());
+//        query.addSort(pageRequest.getSort());
+        query.addSort(Sort.by("id").descending());
+
         return elasticsearchOperations.search(query, OrderInfo.class, IndexCoordinates.of(INDEX_NAME));
     }
 
@@ -111,7 +113,8 @@ public class CustomOrderInfoRepoImpl implements CustomOrderInfoRepo {
         log.info("stringQuery: {}", stringQuery);
         org.springframework.data.elasticsearch.core.query.Query query = new StringQuery(stringQuery);
         query.setPageable(PageRequest.of(pageRequest.getPageNumber(), pageRequest.getPageSize()));
-        query.addSort(pageRequest.getSort());
+//        query.addSort(pageRequest.getSort());
+        query.addSort(Sort.by("id").descending());
         return elasticsearchOperations.search(query, OrderInfo.class, IndexCoordinates.of(INDEX_NAME));
     }
 }

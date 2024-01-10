@@ -2,6 +2,7 @@ package com.chris.data.elasticsearch;
 
 import co.elastic.clients.elasticsearch._types.SortOptions;
 import co.elastic.clients.elasticsearch._types.SortOptionsBuilders;
+import com.chris.data.dto.BaseDTO;
 import com.chris.data.elasticsearch.sub.SaleInfo;
 import com.chris.data.entity.order.sub.ProductItemDetail;
 import com.chris.data.entity.product.*;
@@ -29,7 +30,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Document(indexName = "product_info")
-public class ProductInfo implements Serializable {
+public class ProductInfo extends BaseDTO<String> implements Serializable {
     @Id
     private long id;
 //    @Field(type = FieldType.Text, name = "preview")
@@ -64,7 +65,7 @@ public class ProductInfo implements Serializable {
     private SaleInfo sales;
 
     public static ProductInfo from(Product product, List<Category> categoriesTree ) {
-        return ProductInfo.builder()
+        ProductInfo productInfo =  ProductInfo.builder()
                 .id(product.getId())
                 .preview(product.getPreview())
                 .name(product.getName())
@@ -77,6 +78,12 @@ public class ProductInfo implements Serializable {
                 .productItems(product.getProductItems().stream().map(item -> ProductItemDetail.from(item,product)).toList())
                 .sales(new SaleInfo(0,0))
                 .build();
+
+        productInfo.setCreatedBy(product.getCreatedBy());
+        productInfo.setCreatedDate(product.getCreatedDate());
+        productInfo.setLastModifiedBy(product.getLastModifiedBy());
+        productInfo.setLastModifiedDate(product.getLastModifiedDate());
+        return productInfo;
     }
 
 //    public static ProductInfo from (Product product) {

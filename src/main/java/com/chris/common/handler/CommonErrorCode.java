@@ -77,8 +77,13 @@ public enum CommonErrorCode {
     ORDER_NOT_FOUND( "ORDER_NOT_FOUND", "Order is not found"),
     RATING_NOT_FOUND( "RATING_NOT_FOUND", "Rating is not found"),
     SHIPMENT_NOT_FOUND( "SHIPMENT_NOT_FOUND", "Shipment is not found"),
+    INVOICE_NOT_FOUND( "INVOICE_NOT_FOUND", "Invoice is not found"),
 
-    CATEGORY_NOT_FOUND( "CATEGORY_NOT_FOUND", "Category is not found");
+    CATEGORY_NOT_FOUND( "CATEGORY_NOT_FOUND", "Category is not found"),
+
+    //PAYMENT SERVICE
+    ACCOUNT_NOT_FOUND( "ACCOUNT_NOT_FOUND", "Account is not found"),
+    ACCOUNT_EXISTED( "ACCOUNT_PAYMENT_EXISTED", "You have already had an account for this payment system");
 
 
 

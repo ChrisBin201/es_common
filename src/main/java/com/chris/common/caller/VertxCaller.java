@@ -68,7 +68,7 @@ public class VertxCaller implements Caller{
 
     @Override
     public <V> Mono<V> getMono(String uri, Class<V> responseType) {
-        return null;
+        return getMono(uri, responseType, null, null, null);
     }
 
     @Override

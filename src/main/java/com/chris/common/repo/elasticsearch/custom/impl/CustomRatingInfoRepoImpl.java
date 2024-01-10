@@ -52,7 +52,7 @@ public class CustomRatingInfoRepoImpl implements CustomRatingInfoRepo {
             String condition = """
                     ,{
                         "terms": {
-                            "product_item_id": %s
+                            "order_line.product_item.id": %s
                         }
                     }
                     """;

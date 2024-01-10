@@ -4,11 +4,14 @@ import com.chris.common.handler.CommonErrorCode;
 import com.chris.common.handler.CommonException;
 import com.chris.data.dto.user.CustomerDTO;
 import com.chris.data.dto.user.SellerDTO;
+import com.chris.data.dto.user.UserDTO;
 import com.chris.data.entity.product.ProductItem;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 @Slf4j
 @Component
@@ -42,6 +45,35 @@ public class UserServiceCaller {
                         return Mono.error(throwable);
                     }
                     String errorMessage = String.format("Error get customer info with error %s", throwable.getLocalizedMessage());
+                    log.error(errorMessage);
+                    return Mono.error(new CommonException(500, CommonErrorCode.INTERNAL_SERVER_ERROR.toString(), errorMessage));
+                });
+    }
+
+    public Mono<UserDTO> getAdminInfo() {
+        String url = USER_SERVICE_ENDPOINT + "/user/admin";
+        return caller.getMono(url, UserDTO.class)
+                .onErrorResume(throwable -> {
+                    if (throwable instanceof CommonException) {
+                        log.error(((CommonException) throwable).getMessage());
+                        return Mono.error(throwable);
+                    }
+                    String errorMessage = String.format("Error get admin info with error %s", throwable.getLocalizedMessage());
+                    log.error(errorMessage);
+                    return Mono.error(new CommonException(500, CommonErrorCode.INTERNAL_SERVER_ERROR.toString(), errorMessage));
+                });
+    }
+
+    public Mono<List<UserDTO>> getAllAdminRoles() {
+        String url = USER_SERVICE_ENDPOINT + "/user/admin/all-role";
+        return caller.getMono(url, UserDTO[].class)
+                .flatMap(users -> Mono.just(List.of(users)))
+                .onErrorResume(throwable -> {
+                    if (throwable instanceof CommonException) {
+                        log.error(((CommonException) throwable).getMessage());
+                        return Mono.error(throwable);
+                    }
+                    String errorMessage = String.format("Error get all user with admin roles with error %s", throwable.getLocalizedMessage());
                     log.error(errorMessage);
                     return Mono.error(new CommonException(500, CommonErrorCode.INTERNAL_SERVER_ERROR.toString(), errorMessage));
                 });

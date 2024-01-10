@@ -11,6 +11,7 @@ import com.chris.data.dto.user.SellerDTO;
 import com.chris.data.elasticsearch.OrderInfo;
 import com.chris.data.elasticsearch.ProductInfo;
 import com.chris.data.elasticsearch.sub.ShopDetail;
+import com.chris.data.entity.order.Order;
 import com.chris.data.entity.order.OrderLine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -38,13 +39,12 @@ public class ElasticOrderInfoServiceImpl implements ElasticOrderInfoService {
 
     @Override
     public PaginationResult<OrderInfo> searchByCustomer(String status, PageRequest pageRequest) {
-        //TODO implement this method
         long total = 0;
         long pageNumber = 0;
         List<OrderInfo> list = null;
         String statusStr = "";
         if(!status.isBlank()) {
-            OrderLine.OrderStatus orderStatus = OrderLine.OrderStatus.fromString(status);
+            Order.OrderStatus orderStatus = Order.OrderStatus.fromString(status);
             statusStr = orderStatus.name();
         }
         SearchHits<OrderInfo> orderInfos = customOrderInfoRepo.searchByCustomer(statusStr, pageRequest);
@@ -58,13 +58,12 @@ public class ElasticOrderInfoServiceImpl implements ElasticOrderInfoService {
 
     @Override
     public PaginationResult<OrderInfo> searchBySeller(String status, PageRequest pageRequest) {
-        //TODO implement this method
         long total = 0;
         long pageNumber = 0;
         List<OrderInfo> list = null;
         String statusStr = "";
         if(!status.isBlank()) {
-            OrderLine.OrderStatus orderStatus = OrderLine.OrderStatus.fromString(status);
+            Order.OrderStatus orderStatus = Order.OrderStatus.fromString(status);
             statusStr = orderStatus.name();
         }
         SearchHits<OrderInfo> orderInfos = customOrderInfoRepo.searchBySeller(statusStr, pageRequest);
@@ -77,10 +76,17 @@ public class ElasticOrderInfoServiceImpl implements ElasticOrderInfoService {
     }
 
     @Override
-    public long saveOrderInfo(OrderLine orderLine) {
-        SellerDTO sellerDTO = userServiceCaller.getSellerInfo(orderLine.getProductItem().getProductInfo().getSellerId()).block();
-        sellerDTO.setId(orderLine.getProductItem().getProductInfo().getSellerId());
-        OrderInfo orderInfo = OrderInfo.from(orderLine, ShopDetail.from(sellerDTO));
+    public long saveOrderInfo(Order order) {
+        SellerDTO sellerDTO = userServiceCaller.getSellerInfo(order.getSellerId()).block();
+        sellerDTO.setId(order.getSellerId());
+        OrderInfo orderInfo = OrderInfo.from(order, ShopDetail.from(sellerDTO));
         return orderInfoRepo.save(orderInfo).getId();
+    }
+
+    @Override
+    public OrderInfo getById(long id) {
+        return orderInfoRepo.findById(id).orElseThrow(() ->
+                new CommonException(HttpStatus.NOT_FOUND.value(), CommonErrorCode.ORDER_NOT_FOUND.getCode(), CommonErrorCode.ORDER_NOT_FOUND.getMessage())
+        );
     }
 }

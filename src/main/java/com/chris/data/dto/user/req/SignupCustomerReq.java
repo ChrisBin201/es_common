@@ -1,6 +1,7 @@
 package com.chris.data.dto.user.req;
 
 import com.chris.data.dto.user.CountryAddressDTO;
+import com.chris.data.entity.user.Customer;
 import com.chris.data.entity.user.sub.CountryAddress;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -16,8 +17,8 @@ public class SignupCustomerReq extends Signup {
 
     @NotNull
     private CountryAddressDTO address;
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
-    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-    private LocalDateTime dob;
-    private String gender;
+//    @JsonSerialize(using = LocalDateTimeSerializer.class)
+//    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    private long dob;
+    private Customer.Gender gender;
 }

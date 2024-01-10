@@ -16,4 +16,7 @@ public class SellerDTO extends UserDTO {
     @JsonProperty("shop_address")
     private CountryAddress shopAddress;
 
+    @JsonProperty("payment_id")
+    private long paymentId;
+
 }

@@ -56,6 +56,6 @@ public class ElasticRatingInfoServiceImpl implements ElasticRatingInfoService {
 
     @Override
     public RatingInfo findByOrderLineIdAndCustomerId(long orderLineId, long customerId) {
-        return ratingInfoRepo.findByOrderLineIdAndCustomerId(orderLineId, customerId).orElse(null);
+        return ratingInfoRepo.findByOrderLine_IdAndCustomerId(orderLineId, customerId).orElse(null);
     }
 }

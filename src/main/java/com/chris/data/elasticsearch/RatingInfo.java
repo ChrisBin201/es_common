@@ -1,5 +1,6 @@
 package com.chris.data.elasticsearch;
 
+import com.chris.data.dto.BaseDTO;
 import com.chris.data.elasticsearch.sub.CustomerDetail;
 import com.chris.data.entity.order.OrderLine;
 import com.chris.data.entity.order.Rating;
@@ -18,7 +19,7 @@ import org.springframework.data.elasticsearch.annotations.Field;
 @NoArgsConstructor
 @AllArgsConstructor
 @Document(indexName = "rating_info")
-public class RatingInfo {
+public class RatingInfo extends BaseDTO<String> {
     @Id
     private long id;
     private CustomerDetail customer;
@@ -29,11 +30,18 @@ public class RatingInfo {
     private String message;
 
     public static RatingInfo from (CustomerDetail customer, Rating rating) {
-        return RatingInfo.builder()
+        RatingInfo ratingInfo = RatingInfo.builder()
+                .id(rating.getId())
                 .customer(customer)
                 .orderLine(rating.getOrderLine())
                 .rating(rating.getRating())
                 .message(rating.getMessage())
                 .build();
+
+        ratingInfo.setCreatedBy(rating.getCreatedBy());
+        ratingInfo.setCreatedDate(rating.getCreatedDate());
+        ratingInfo.setLastModifiedBy(rating.getLastModifiedBy());
+        ratingInfo.setLastModifiedDate(rating.getLastModifiedDate());
+        return ratingInfo;
     }
 }

@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Data
-@JsonIgnoreProperties(ignoreUnknown = true, value = {"SKU","name"}, allowGetters = true)
+@JsonIgnoreProperties(ignoreUnknown = true, value = {"SKU","name","preview"}, allowGetters = true)
 public class ProductItemDTO {
 
     private Long id;
@@ -19,7 +19,7 @@ public class ProductItemDTO {
     @JsonProperty("quantity_in_stock")
     private Long quantityInStock;
     private Double price;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+//    @JsonInclude(JsonInclude.Include.NON_NULL)
     private MultipartFile preview;
 //    @JsonProperty("variation_options_ids")
 //    private List<Long> variationOptionIds;
